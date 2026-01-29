@@ -57,7 +57,56 @@ EC2 will run the Django application.
     - Use Gunicorn as the application server.
     - Use Nginx as a reverse proxy to handle requests and serve static files.
 
-## 4. Production Security
+## 4. Gunicorn & Nginx Setup
+
+### 4.1. Gunicorn Configuration
+Gunicorn will run the Django application and listen on a Unix socket.
+
+1.  **Create Socket:**
+    `sudo nano /etc/systemd/system/gunicorn.socket` (See `deployment/gunicorn.socket`)
+2.  **Create Service:**
+    `sudo nano /etc/systemd/system/gunicorn.service` (See `deployment/gunicorn.service`)
+    *Ensure `WorkingDirectory` and `ExecStart` match your project path.*
+3.  **Start & Enable:**
+    ```bash
+    sudo systemctl start gunicorn.socket
+    sudo systemctl enable gunicorn.socket
+    ```
+
+### 4.2. Nginx Configuration
+Nginx acts as a reverse proxy and serves static/media files.
+
+1.  **Create Config:**
+    `sudo nano /etc/nginx/sites-available/sebackend` (See `deployment/nginx.conf`)
+2.  **Enable Site:**
+    ```bash
+    sudo ln -s /etc/nginx/sites-available/sebackend /etc/nginx/sites-enabled
+    sudo nginx -t
+    sudo systemctl restart nginx
+    ```
+
+## 5. Deployment Checklist & Security
+
+### 5.1. Static Files
+Before restarting Nginx, collect all static files:
+```bash
+python3 manage.py collectstatic --noinput
+```
+
+### 5.2. Debugging `DATABASE_URL`
+If you see `UnknownSchemeError: Scheme '://' is unknown`, ensure your `.env` has a valid `DATABASE_URL`.
+*   **For RDS:** `DATABASE_URL=postgres://user:password@host:5432/dbname`
+*   **For Local SQLite (Default):** Leave `DATABASE_URL` empty or comment it out in `.env`.
+*   **Manual SQLite:** `DATABASE_URL=sqlite:////home/ubuntu/SEBackend/db.sqlite3` (Note the 4 slashes for absolute path).
+
+### 5.3. Permissions
+Ensure `www-data` has access to the project:
+```bash
+sudo chown -R :www-data /home/ubuntu/SEBackend
+chmod -R 775 /home/ubuntu/SEBackend/media
+```
+
+### 5.4. Production Security
 Ensure the following are set in your EC2 `.env`:
 - `DEBUG=False`
 - `ALLOWED_HOSTS=your-domain.com,your-ec2-ip`
