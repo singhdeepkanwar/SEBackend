@@ -89,11 +89,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASE_URL = os.getenv('DATABASE_URL')
-if DATABASE_URL:
-    DATABASES = {
-        'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
-    }
+
+# Check if DATABASE_URL is provided and looks like a valid URL (contains '://')
+if DATABASE_URL and '://' in DATABASE_URL:
+    try:
+        DATABASES = {
+            'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
+        }
+    except Exception:
+        # If parsing fails for any reason, fall back to SQLite
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 else:
+    # Default to local SQLite if DATABASE_URL is missing or invalid
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
