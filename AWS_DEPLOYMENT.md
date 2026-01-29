@@ -43,7 +43,7 @@ EC2 will run the Django application.
 2.  **Setup Server:**
     ```bash
     sudo apt update
-    sudo apt install python3-pip python3-venv git -y
+    sudo apt install python3-pip python3-venv git nginx -y
     ```
 3.  **Clone & Configure:**
     ```bash
