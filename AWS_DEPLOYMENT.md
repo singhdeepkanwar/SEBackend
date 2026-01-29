@@ -72,6 +72,8 @@ Gunicorn will run the Django application and listen on a Unix socket.
     sudo systemctl start gunicorn.socket
     sudo systemctl enable gunicorn.socket
     ```
+    > [!NOTE]
+    > Gunicorn is configured for **socket activation**. It may show as `inactive (dead)` when you check `systemctl status gunicorn`. This is normal! It will automatically start as soon as Nginx sends the first request to the socket.
 
 ### 4.2. Nginx Configuration
 Nginx acts as a reverse proxy and serves static/media files.
@@ -112,3 +114,32 @@ Ensure the following are set in your EC2 `.env`:
 - `ALLOWED_HOSTS=your-domain.com,your-ec2-ip`
 - `SECRET_KEY=a-very-long-random-string`
 - `SECURE_SSL_REDIRECT=True` (after setting up SSL via Certbot/Let's Encrypt)
+
+## 6. Monitoring & Logs
+
+### 6.1. Gunicorn Logs
+Gunicorn outputs its logs to the system journal. Use `journalctl` to view them:
+```bash
+# View live logs
+sudo journalctl -u gunicorn -f
+
+# View recent logs
+sudo journalctl -u gunicorn -n 100
+```
+
+### 6.2. Nginx Logs
+Nginx keeps access and error logs in `/var/log/nginx/`:
+```bash
+# View access logs (incoming requests)
+sudo tail -f /var/log/nginx/access.log
+
+# View error logs (configuration or permission issues)
+sudo tail -f /var/log/nginx/error.log
+```
+
+### 6.3. Status Checks
+Check if the services are active:
+```bash
+sudo systemctl status gunicorn
+sudo systemctl status nginx
+```
