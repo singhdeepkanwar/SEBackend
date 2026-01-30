@@ -177,6 +177,7 @@ if USE_AWS_S3:
     STORAGES["default"] = {
         "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
     }
+    AWS_QUERYSTRING_AUTH = False
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 
 MEDIA_URL = os.getenv('MEDIA_URL', MEDIA_URL)
