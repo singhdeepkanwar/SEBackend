@@ -90,6 +90,7 @@ class VerifyOTPView(APIView):
 
 
 class CompleteRegistrationView(APIView):
+    authentication_classes = []
     permission_classes = [IsRegistrationTokenAuthenticated]
 
     def post(self, request):

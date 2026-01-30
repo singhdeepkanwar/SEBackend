@@ -12,6 +12,7 @@ class IsRegistrationTokenAuthenticated(BasePermission):
             # Manually authenticate the token from the header
             header = auth.get_header(request)
             if header is None:
+                print("DEBUG: Registration attempt missing Authorization header")
                 return False
             
             raw_token = auth.get_raw_token(header)
