@@ -9,7 +9,10 @@ class UserManager(BaseUserManager):
         if not phone:
             raise ValueError("Phone number is required")
         user = self.model(phone=phone, **extra_fields)
-        user.set_unusable_password() # We use OTP, not passwords
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
         user.save(using=self._db)
         return user
 
