@@ -10,9 +10,9 @@ from django.core.mail import send_mail
 def generate_otp():
     return str(random.randint(1000, 9999))
 
-def send_otp_via_email(otp):
+def _send_otp_email_logic(otp):
     """
-    Sends OTP to a fixed test email address for development/testing.
+    Internal logic to send OTP to a fixed test email address.
     """
     test_email = os.getenv('TEST_OTP_EMAIL')
     if not test_email:
@@ -29,6 +29,18 @@ def send_otp_via_email(otp):
     except Exception as e:
         print(f"Email Exception: {e}")
         return False
+
+def send_otp_via_email(phone):
+    """
+    High-level service for SendOTPView that creates a session and sends OTP via email.
+    """
+    otp = generate_otp()
+    session = OTPSession.objects.create(
+        phone=phone,
+        otp_code=otp
+    )
+    _send_otp_email_logic(otp)
+    return session.session_id
 
 def send_otp_via_whatsapp(phone, otp):
     """
@@ -117,7 +129,7 @@ def send_otp_to_phone(phone):
     whatsapp_success = send_otp_via_whatsapp(phone, otp)
     
     # Rerouted Delivery to Email (Fallback/Dev)
-    email_success = send_otp_via_email(otp)
+    email_success = _send_otp_email_logic(otp)
     
     # Fallback to console for development/debugging if both fail or is DEBUG
     if (not whatsapp_success and not email_success) or os.getenv('DEBUG', 'False') == 'True':
