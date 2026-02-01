@@ -1,0 +1,83 @@
+Found 12 test(s).
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Operations to perform:
+  Synchronize unmigrated apps: corsheaders, django_filters, messages, rest_framework, rest_framework_simplejwt, staticfiles, storages
+  Apply all migrations: accounts, admin, auth, contenttypes, listings, sessions, token_blacklist
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying accounts.0001_initial... OK
+  Applying accounts.0002_alter_user_email... OK
+  Applying accounts.0003_otpsession_attempts_otpsession_last_attempt... OK
+  Applying accounts.0004_otpsession_accounts_ot_phone_a2149f_idx_and_more... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying listings.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying token_blacklist.0001_initial... OK
+  Applying token_blacklist.0002_outstandingtoken_jti_hex... OK
+  Applying token_blacklist.0003_auto_20171017_2007... OK
+  Applying token_blacklist.0004_auto_20171017_2013... OK
+  Applying token_blacklist.0005_remove_outstandingtoken_jti... OK
+  Applying token_blacklist.0006_auto_20171017_2113... OK
+  Applying token_blacklist.0007_auto_20171017_2214... OK
+  Applying token_blacklist.0008_migrate_to_bigautofield... OK
+  Applying token_blacklist.0010_fix_migrate_to_bigautofield... OK
+  Applying token_blacklist.0011_linearizes_history... OK
+  Applying token_blacklist.0012_alter_outstandingtoken_user... OK
+  Applying token_blacklist.0013_alter_blacklistedtoken_options_and_more... OK
+System check identified no issues (0 silenced).
+test_complete_registration (accounts.tests.AccountsTests.test_complete_registration)
+Test completing registration with a valid registration token. ... C:\Users\akshi\AppData\Roaming\Python\Python313\site-packages\django\core\handlers\base.py:62: UserWarning: No directory at: C:\Users\akshi\.gemini\antigravity\scratch\SEBackend\staticfiles\
+  mw_instance = middleware(adapted_handler)
+DEBUG: Token purpose: registration
+DEBUG: Registration attempt for phone 9876543210 with data: {'full_name': 'Test User', 'email': 'test@example.com', 'city': 'Test City', 'address': '123 Test St'}
+ok
+test_logout (accounts.tests.AccountsTests.test_logout)
+Test logout functionality (blacklist refresh token). ... LOGOUT DATA RECEIVED: {'refresh': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc3MDU1ODYwNCwiaWF0IjoxNzY5OTUzODA0LCJqdGkiOiIxMjQ0YWZlY2ViNGE0NWQ4ODBkYjhkNGY0YTIwYjRkNyIsInVzZXJfaWQiOiIxIn0.hrJQ0ze08hYmOi3NZoopxrLE52MCR1tsDCT9YInZxII'}
+ok
+test_send_otp (accounts.tests.AccountsTests.test_send_otp)
+Test that OTP is sent successfully (mocked). ... ok
+test_user_profile_access (accounts.tests.AccountsTests.test_user_profile_access)
+Test accessing and updating user profile. ... DEBUG: Returning profile for user 9876543210: {'id': 1, 'phone': '9876543210', 'full_name': 'Original Name', 'email': None, 'city': '', 'address': '', 'is_profile_complete': False, 'date_joined': '2026-02-01T13:50:04.627390Z'}
+ok
+test_verify_otp_existing_user (accounts.tests.AccountsTests.test_verify_otp_existing_user)
+Test LOGIN flow for existing user. ... ok
+test_verify_otp_invalid (accounts.tests.AccountsTests.test_verify_otp_invalid)
+Test verification with wrong OTP. ... ok
+test_verify_otp_new_user (accounts.tests.AccountsTests.test_verify_otp_new_user)
+Test OTP verification for a new user (SIGNUP flow). ... ok
+test_create_inquiry (listings.tests.InquiryTests.test_create_inquiry)
+Test creating an inquiry for a property. ... ok
+test_create_property (listings.tests.PropertyTests.test_create_property)
+Test creating a property listing. ... C:\Users\akshi\AppData\Roaming\Python\Python313\site-packages\rest_framework\fields.py:992: UserWarning: min_value should be an integer or Decimal instance.
+  warnings.warn("min_value should be an integer or Decimal instance.")
+ok
+test_create_property_unauthenticated (listings.tests.PropertyTests.test_create_property_unauthenticated)
+Test that unauthenticated users cannot create properties. ... ok
+test_list_properties (listings.tests.PropertyTests.test_list_properties)
+Test listing properties. ... ok
+test_retrieve_property (listings.tests.PropertyTests.test_retrieve_property)
+Test retrieving a single property. ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 3.394s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...

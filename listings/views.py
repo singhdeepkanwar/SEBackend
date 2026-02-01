@@ -11,12 +11,12 @@ from .serializers import (
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework.parsers import MultiPartParser, FormParser # <--- IMPORT THIS
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser # <--- IMPORT THIS
 
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all()
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    parser_classes = (MultiPartParser, FormParser) 
+    parser_classes = (MultiPartParser, FormParser, JSONParser) 
     filterset_fields = {
         'price': ['gte', 'lte'],  # Allows ?price__gte=1000&price__lte=5000
         'city': ['exact', 'icontains'],
