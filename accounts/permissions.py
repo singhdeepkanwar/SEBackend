@@ -1,3 +1,5 @@
+import os
+from rest_framework import permissions
 from rest_framework.permissions import BasePermission
 from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -25,3 +27,15 @@ class IsRegistrationTokenAuthenticated(BasePermission):
         except Exception as e:
             print(f"DEBUG: Registration token validation failed: {str(e)}")
             return False
+
+class HasERPAccess(permissions.BasePermission):
+    """
+    Allows access only if the 'X-ERP-API-Key' header matches the ERP_API_KEY in settings/env.
+    """
+    def has_permission(self, request, view):
+        expected_key = os.getenv('ERP_API_KEY')
+        if not expected_key:
+            return False # Fail safe if key not configured
+        
+        incoming_key = request.headers.get('X-ERP-API-Key') or request.headers.get('x-erp-api-key')
+        return incoming_key == expected_key
