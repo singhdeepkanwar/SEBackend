@@ -6,7 +6,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from .serializers import SendOTPSerializer,VerifyOTPSerializer, RegistrationSerializer, UserSerializer
-from .services import send_otp_to_phone
+from .services import send_otp_to_phone, send_otp_via_email
 from .models import OTPSession, User
 from .permissions import IsRegistrationTokenAuthenticated
 from rest_framework.throttling import ScopedRateThrottle
@@ -18,7 +18,7 @@ class SendOTPView(APIView):
         serializer = SendOTPSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
-            session_id = send_otp_to_phone(phone)
+            session_id = send_otp_via_email(phone)
             
             return Response({
                 "session_id": session_id,

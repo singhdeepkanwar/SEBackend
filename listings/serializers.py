@@ -21,13 +21,17 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(allow_empty_file=False),
         write_only=True, required=False
     )
+    deleted_image_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True, required=False
+    )
 
     class Meta:
         model = Property
         fields = [
             'id', 'title', 'description', 'property_type', 'listing_type',
             'area', 'unit', 'price', 'bedrooms', 'bathrooms', 'amenities',
-            'address', 'city', 'uploaded_images',
+            'address', 'city', 'uploaded_images', 'deleted_image_ids',
             # --- PROTECTED FIELDS ---
             'status', 'admin_notes', 'is_featured'
         ]
@@ -38,6 +42,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         # 1. Pop the amenities data out of the dictionary first
         amenities_data = validated_data.pop('amenities', [])
         images_data = validated_data.pop('uploaded_images', [])
+        validated_data.pop('deleted_image_ids', None) # Not needed in create
 
         # 2. Create the property object without amenities
         property_obj = Property.objects.create(**validated_data)
@@ -51,6 +56,30 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
             PropertyImage.objects.create(property=property_obj, image=image)
 
         return property_obj
+
+    def update(self, instance, validated_data):
+        # 1. Handle image deletions
+        deleted_image_ids = validated_data.pop('deleted_image_ids', [])
+        if deleted_image_ids:
+            # Delete only images that belong to this property
+            PropertyImage.objects.filter(id__in=deleted_image_ids, property=instance).delete()
+
+        # 2. Handle new image uploads
+        images_data = validated_data.pop('uploaded_images', [])
+        for image in images_data:
+            PropertyImage.objects.create(property=instance, image=image)
+
+        # 3. Handle amenities update
+        amenities_data = validated_data.pop('amenities', None)
+        if amenities_data is not None:
+            instance.amenities.set(amenities_data)
+
+        # 4. Standard Update for other fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        instance.save()
+        return instance
 
 class PropertyReadSerializer(serializers.ModelSerializer):
     images = PropertyImageSerializer(many=True, read_only=True)

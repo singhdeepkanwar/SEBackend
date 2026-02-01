@@ -107,6 +107,7 @@ if DATABASE_URL and '://' in DATABASE_URL:
                 'NAME': BASE_DIR / 'db.sqlite3',
             }
         }
+    
 else:
     # Default to local SQLite if DATABASE_URL is missing or invalid
     DATABASES = {
