@@ -21,7 +21,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         child=serializers.ImageField(allow_empty_file=False),
         write_only=True, required=False
     )
-    deleted_image_ids = serializers.ListField(
+    delete_images = serializers.ListField(
         child=serializers.IntegerField(),
         write_only=True, required=False
     )
@@ -31,7 +31,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 'property_type', 'listing_type',
             'area', 'unit', 'price', 'bedrooms', 'bathrooms', 'amenities',
-            'address', 'city', 'uploaded_images', 'deleted_image_ids',
+            'address', 'city', 'uploaded_images', 'delete_images',
             # --- PROTECTED FIELDS ---
             'status', 'admin_notes', 'is_featured'
         ]
@@ -42,7 +42,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
         # 1. Pop the amenities data out of the dictionary first
         amenities_data = validated_data.pop('amenities', [])
         images_data = validated_data.pop('uploaded_images', [])
-        validated_data.pop('deleted_image_ids', None) # Not needed in create
+        validated_data.pop('delete_images', None) # Not needed in create
 
         # 2. Create the property object without amenities
         property_obj = Property.objects.create(**validated_data)
@@ -59,7 +59,7 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # 1. Handle image deletions
-        deleted_image_ids = validated_data.pop('deleted_image_ids', [])
+        deleted_image_ids = validated_data.pop('delete_images', [])
         if deleted_image_ids:
             # Delete only images that belong to this property
             PropertyImage.objects.filter(id__in=deleted_image_ids, property=instance).delete()
