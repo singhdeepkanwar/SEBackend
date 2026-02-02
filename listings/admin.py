@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 from django.utils.html import format_html
+from django.forms import CheckboxSelectMultiple
 
 
 class PropertyImageInline(admin.TabularInline):
@@ -23,6 +24,11 @@ class PropertyAdmin(admin.ModelAdmin):
     list_filter = ('status', 'property_type', 'city')
     search_fields = ('title', 'address', 'owner__phone')
     inlines = [PropertyImageInline]
+    
+    # This displays ManyToMany fields (amenities) as checkboxes
+    formfield_overrides = {
+        models.ManyToManyField: {'widget': CheckboxSelectMultiple},
+    }
     
     # Actions to quickly verify properties from the list view
     actions = ['make_verified', 'make_sold']
