@@ -6,7 +6,7 @@ from .models import Property, Inquiry, Favorite, Amenity
 from .serializers import (
     PropertyReadSerializer, PropertyCreateSerializer, 
     AdminPropertyVerifySerializer, DashboardSummarySerializer,
-    InquirySerializer, FavoriteSerializer
+    InquirySerializer, FavoriteSerializer, AmenitySerializer
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
@@ -42,7 +42,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff:
             return Property.objects.all()
         return Property.objects.filter(status='VERIFIED')
-
+    
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
     
@@ -126,3 +126,8 @@ class InquiryViewSet(viewsets.ModelViewSet):
         
         inquiry.save()
         return Response({'status': 'Lead updated successfully'})
+
+class AmenityViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Amenity.objects.all()
+    serializer_class = AmenitySerializer
+    permission_classes = [permissions.AllowAny]

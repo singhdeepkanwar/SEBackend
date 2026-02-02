@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Property, PropertyImage, VerificationDocument, Amenity, Favorite, Inquiry, Favorite
+from .models import Property, PropertyImage, VerificationDocument, Amenity, Favorite, Inquiry
 
 class AmenitySerializer(serializers.ModelSerializer):
-    class Image:
+    class Meta:
         model = Amenity
         fields = ['id', 'name', 'icon_name']
 
