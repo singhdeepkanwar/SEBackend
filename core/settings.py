@@ -100,13 +100,16 @@ if DATABASE_URL and '://' in DATABASE_URL:
             'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
         }
     except Exception:
-        # If parsing fails for any reason, fall back to SQLite
-        DATABASES = {
+         DATABASES = {
             'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': BASE_DIR / 'db.sqlite3',
+               'ENGINE': 'django.db.backends.postgresql',
+               'NAME': 'sestate',
+                'USER': 'postgres',
+                'PASSWORD': DB_PSW,
+                'HOST': '127.0.0.1', # Use this instead of 'localhost' for Bitnami
+                'PORT': '5432',
             }
-        }
+    }
     
 else:
     # Default to local SQLite if DATABASE_URL is missing or invalid
