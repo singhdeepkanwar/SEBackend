@@ -18,7 +18,7 @@ class SendOTPView(APIView):
         serializer = SendOTPSerializer(data=request.data)
         if serializer.is_valid():
             phone = serializer.validated_data['phone']
-            session_id = send_otp_via_email(phone)
+            session_id = send_otp_to_phone(phone)
             
             return Response({
                 "session_id": session_id,
