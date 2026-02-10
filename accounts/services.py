@@ -83,8 +83,8 @@ def send_otp_via_twilio(phone, otp):
 
 def send_otp_to_phone(phone):
     """
-    Primary OTP delivery service. Generates code, creates session, 
-    and attempts WhatsApp delivery with email fallback.
+    Primary OTP delivery service. Generates code, creates session,
+    and delivers via Twilio SMS (with optional test-email logging).
     """
     try:
         # Rate limiting: 60 seconds between requests
