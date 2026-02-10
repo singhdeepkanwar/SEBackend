@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASE_URL = os.getenv('DATABASE_URL')
+DB_PSW = os.getenv('DB_PSW')
 
 # Check if DATABASE_URL is provided and looks like a valid URL (contains '://')
 if DATABASE_URL and '://' in DATABASE_URL:

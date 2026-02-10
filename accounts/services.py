@@ -110,7 +110,7 @@ def send_otp_to_phone(phone):
     twilio_success = send_otp_via_twilio(phone, otp)
     
     # Fallback/Parallel delivery to test email if configured
-    email_success = _send_otp_email_logic(otp)
+    # email_success = _send_otp_email_logic(otp)
     
     # Log for local development if Twilio fails or DEBUG is on
     if not twilio_success or os.getenv('DEBUG', 'False') == 'True':
