@@ -103,6 +103,45 @@ class Inquiry(models.Model):
     class Meta:
         verbose_name_plural = "Inquiries"
 
+class PreListing(models.Model):
+    """
+    Captures property owner interest before platform launch.
+    No login required — public form submission.
+    """
+    PROPERTY_TYPE_CHOICES = [
+        ('LAND', 'Land'), ('PLOT', 'Plot'), ('PG', 'PG/Hostel'),
+        ('APARTMENT', 'Apartment'), ('HOUSE', 'House'), ('COMMERCIAL', 'Commercial'),
+    ]
+    UNIT_CHOICES = [
+        ('SQFT', 'Sq. Ft.'), ('SQYD', 'Sq. Yards/Gaj'), ('SQMTR', 'Sq. Mtr.'),
+        ('ACRE', 'Acres'), ('MARLA', 'Marla'), ('KANAL', 'Kanal'),
+    ]
+
+    # Owner info
+    full_name   = models.CharField(max_length=150)
+    phone       = models.CharField(max_length=20)
+    city        = models.CharField(max_length=100)
+
+    # Property info
+    listing_type  = models.CharField(max_length=10, choices=[('RENT', 'Rent'), ('SALE', 'Sale')])
+    property_type = models.CharField(max_length=20, choices=PROPERTY_TYPE_CHOICES)
+    price         = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    area          = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
+    unit          = models.CharField(max_length=10, choices=UNIT_CHOICES, default='SQYD')
+    address       = models.CharField(max_length=500, blank=True)
+    notes         = models.TextField(blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.full_name} — {self.property_type} ({self.phone})"
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Pre-Listing"
+        verbose_name_plural = "Pre-Listings"
+
+
 class Favorite(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 

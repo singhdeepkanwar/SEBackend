@@ -1,17 +1,18 @@
 from django.db.models import Sum, Count
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Property, Inquiry, Favorite, Amenity
+from .models import Property, Inquiry, Favorite, Amenity, PreListing
 from .serializers import (
-    PropertyReadSerializer, PropertyCreateSerializer, 
+    PropertyReadSerializer, PropertyCreateSerializer,
     AdminPropertyVerifySerializer, DashboardSummarySerializer,
-    InquirySerializer, FavoriteSerializer, AmenitySerializer
+    InquirySerializer, FavoriteSerializer, AmenitySerializer,
+    PreListingSerializer,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-from rest_framework.parsers import MultiPartParser, FormParser # <--- IMPORT THIS
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class PropertyViewSet(viewsets.ModelViewSet):
     queryset = Property.objects.all()
@@ -130,4 +131,14 @@ class InquiryViewSet(viewsets.ModelViewSet):
 class AmenityViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Amenity.objects.all()
     serializer_class = AmenitySerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class PreListingCreateView(generics.CreateAPIView):
+    """
+    Public endpoint — no auth required.
+    POST /api/pre-listings/  →  saves owner + property interest before launch.
+    """
+    queryset = PreListing.objects.all()
+    serializer_class = PreListingSerializer
     permission_classes = [permissions.AllowAny]

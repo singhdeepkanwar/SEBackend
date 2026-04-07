@@ -46,4 +46,11 @@ class InquiryAdmin(admin.ModelAdmin):
 admin.site.register(Amenity)
 admin.site.register(Favorite)
 
+@admin.register(PreListing)
+class PreListingAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'phone', 'city', 'property_type', 'listing_type', 'price', 'created_at')
+    list_filter = ('listing_type', 'property_type', 'city')
+    search_fields = ('full_name', 'phone', 'city', 'address')
+    readonly_fields = ('created_at',)
+
 

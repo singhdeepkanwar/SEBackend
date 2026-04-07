@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Property, PropertyImage, VerificationDocument, Amenity, Favorite, Inquiry
+from .models import Property, PropertyImage, VerificationDocument, Amenity, Favorite, Inquiry, PreListing
 
 class AmenitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -159,6 +159,17 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super().create(validated_data)
+
+
+class PreListingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PreListing
+        fields = [
+            'id', 'full_name', 'phone', 'city',
+            'listing_type', 'property_type', 'price', 'area', 'unit',
+            'address', 'notes', 'created_at',
+        ]
+        read_only_fields = ['id', 'created_at']
 
 
 class DashboardSummarySerializer(serializers.Serializer):
