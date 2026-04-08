@@ -238,6 +238,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "https://sangrurestate.com",
     "https://www.sangrurestate.com",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
 ]
 
 # Email Setup
